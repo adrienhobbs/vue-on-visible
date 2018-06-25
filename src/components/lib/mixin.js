@@ -27,6 +27,9 @@ export default {
       default: 20,
       required: false,
       type: Number
+    },
+    threshold: {
+      default: 0.2
     }
   },
   computed: {
@@ -55,18 +58,23 @@ export default {
     }
   },
   mounted() {
+    const threshold = this.threshold || this.buildThresholdList(this.accuracy)
     this.observer = new IntersectionObserver(this.handleObserver, {
       root: null,
-      threshold: this.buildThresholdList(this.accuracy)
+      threshold
     })
     this.observer.observe(this.$refs.container)
   },
   methods: {
     getOffset(loc, height) {
       // handle issue when element height is smaller than offset.
-      return height < Math.abs(this.offset[loc])
-        ? Math.sign(this.offset[loc]) * height
-        : this.offset[loc]
+      if (!this.threshold) {
+        return height < Math.abs(this.offset[loc])
+          ? Math.sign(this.offset[loc]) * height
+          : this.offset[loc]
+      } else {
+        return height * -this.threshold
+      }
     },
     buildThresholdList(numSteps) {
       var thresholds = []

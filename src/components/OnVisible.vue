@@ -1,7 +1,6 @@
 <template>
-  <OnVisibleEmitter :offset="offsets"
-                    :yoyo="yoyo"
-                    :accuracy="10"
+  <OnVisibleEmitter :yoyo="yoyo"
+                    :threshold="0.4"
                     v-on:initial-visibility="setViewportValues"
                     v-on:enter:from-bottom="handleEnterFromBottom"
                     v-on:enter:from-top="handleEnterFromTop"
@@ -21,9 +20,6 @@
 
 <script>
 import {OnVisibleEmitter} from './lib/index'
-import test from './lib'
-console.log(test)
-
 
 export default {
   name: 'OnVisible',

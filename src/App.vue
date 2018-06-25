@@ -65,7 +65,7 @@ export default {
       animationDurationMs: 580,
       animateAbove: true,
       animateBelow: true,
-      numItems: 100,
+      numItems: 10,
       animation: 'fade',
       yoyo: true
     }
@@ -87,6 +87,8 @@ export default {
 <style>
 body {
   background: #403d3d;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 .offset {
   width: 100%;
@@ -96,10 +98,8 @@ body {
   position: fixed;
 }
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
 }
 .controls {
