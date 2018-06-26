@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "deploy-page": "gh-pages -d dist"
   },
   "dependencies": {
     "vue": "^2.5.16"
@@ -14,6 +15,7 @@
     "@vue/cli-plugin-babel": "^3.0.0-rc.3",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.3",
     "@vue/cli-service": "^3.0.0-rc.3",
+    "gh-pages": "^1.2.0",
     "vue-template-compiler": "^2.5.16"
   },
   "eslintConfig": {
@@ -39,5 +41,21 @@
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
-  ]
+  ],
+  "description": "vue-on-visible",
+  "main": "babel.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrienhobbs/vue-on-visible.git"
+  },
+  "keywords": [
+    "scroll",
+    "intersection-observer"
+  ],
+  "author": "Adrien Hobbs",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adrienhobbs/vue-on-visible/issues"
+  },
+  "homepage": "https://github.com/adrienhobbs/vue-on-visible#readme"
 }
