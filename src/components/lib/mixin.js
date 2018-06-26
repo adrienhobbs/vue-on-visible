@@ -8,11 +8,10 @@ export default {
   data() {
     return {
       hasEntered: false,
-      above: false,
-      below: false,
+      // isInView: false,
       top: 0,
-      bottom: 0,
-      isInView: false
+      height: 0,
+      bottom: 0
     }
   },
   props: {
@@ -41,22 +40,45 @@ export default {
         above: this.above,
         below: this.below
       }
+    },
+    rect() {
+      return this.$refs.container.getBoundingClientRect()
+    },
+    offsetArgs() {
+      return {
+        height: this.height,
+        offset: this.offset,
+        threshold: this.threshold
+      }
+    },
+    above() {
+      return isAbove({
+        bottom: this.bottom,
+        offset: this.getTopOffset(this.offsetArgs)
+      })
+    },
+    below() {
+      return isBelow({
+        top: this.top,
+        offset: this.getBottomOffset(this.offsetArgs)
+      })
+    },
+    isInView() {
+      return !this.above && !this.below
     }
   },
   watch: {
-    isInView(isInView, wasInView) {
-      if (wasInView && this.below) this.emitEvent('exit:to-bottom')
+    isInView(isInView) {
+      this.$emit('visibility-change', {
+        visible: isInView,
+        bottom: this.bottom,
+        top: this.top,
+        height: this.height
+      })
       if (isInView && !this.yoyo) this.observer.unobserve(this.$refs.container)
     },
     yoyo(yoyo, wasYoyo) {
       if (!wasYoyo && yoyo) this.observer.observe(this.$refs.container)
-    },
-    above(above, wasAbove) {
-      if (wasAbove && this.isInView) this.emitEvent('enter:from-top')
-      else if (above && !this.isInView) this.emitEvent('exit:to-top')
-    },
-    below(below, wasBelow) {
-      if (wasBelow && this.isInView) this.emitEvent('enter:from-bottom')
     }
   },
   mounted() {
@@ -70,23 +92,6 @@ export default {
   methods: {
     getTopOffset: getOffset('top'),
     getBottomOffset: getOffset('bottom'),
-    updateVp({ top, bottom, height }) {
-      const offsetArgs = {
-        height,
-        offset: this.offset,
-        threshold: this.threshold
-      }
-      this.above = isAbove({
-        bottom,
-        offset: this.getTopOffset(offsetArgs)
-      })
-      this.below = isBelow({
-        top,
-        offset: this.getBottomOffset(offsetArgs)
-      })
-
-      this.isInView = !this.above && !this.below
-    },
     buildThresholdList(numSteps) {
       var thresholds = []
 
@@ -105,13 +110,17 @@ export default {
     handleObserver(entries) {
       entries.forEach(entry => {
         const { top, height, bottom } = entry.boundingClientRect
-        this.updateVp({ top, bottom, height })
+        this.top = top
+        this.height = height
+        this.bottom = bottom
 
         if (!this.hasEntered) {
           this.hasEntered = true
           this.$emit('initial-visibility', {
-            above: this.above,
-            below: this.below
+            visible: this.isInView,
+            top,
+            bottom,
+            height
           })
         }
       })

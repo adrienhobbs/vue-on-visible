@@ -7,10 +7,12 @@ export const getOffset = loc => {
   return function({ height, threshold, offset }) {
     if (!threshold) {
       return height < Math.abs(offset[loc])
-        ? Math.sign(this.offset[loc]) * height
-        : this.offset[loc]
+        ? Math.sign(offset[loc]) * height
+        : offset[loc]
     } else {
       return height * -threshold
     }
   }
 }
+export const getTopOffset = getOffset('top')
+export const getBottomOffset = getOffset('bottom')

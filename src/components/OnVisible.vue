@@ -1,13 +1,11 @@
 <template>
   <OnVisibleEmitter :yoyo="yoyo"
                     :offset="offsets"
-                    v-on:initial-visibility="setViewportValues"
-                    v-on:enter:from-bottom="handleEnterFromBottom"
-                    v-on:enter:from-top="handleEnterFromTop"
-                    v-on:exit:to-top="handleLeaveToTop"
-                    :threshold="threshold"
-                    v-on:exit:to-bottom="handleLeaveToBottom">
+                    v-on:initial-visibility="handleVisibilityChange"
+                    v-on:visibility-change="handleVisibilityChange"
+                    :threshold="threshold">
     <div :class="className"
+         ref="container"
          class="item"
          :style="{ animationDuration: durationMs + 'ms', height: height + 'px'}"
          v-on:animationend="animationClass = false">
@@ -17,6 +15,7 @@
 </template>
 
 <script>
+import { isAbove, isBelow, getTopOffset, getBottomOffset } from './lib/utils'
 import {OnVisibleEmitter} from './lib/index'
 
 export default {
@@ -55,8 +54,8 @@ export default {
   data() {
     return {
       height: this.getRandomHeight(),
-      above: false,
-      below: false,
+      top: 0,
+      bottom: 0,
       visible: false,
       animationClass: false,
     }
@@ -70,6 +69,18 @@ export default {
         return {top: this.offset, bottom: this.offset}
       }
     },
+    above() {
+      return isAbove({
+        bottom: this.bottom,
+        offset: getTopOffset({height: this.height, threshold: this.threshold, offset: this.offsets})
+      })
+    },
+    below() {
+      return isBelow({
+        top: this.top,
+        offset: getBottomOffset({height: this.height, threshold: this.threshold, offset: this.offsets})
+      })
+    },
     className() {
       return {
         above: this.above && this.animateAbove,
@@ -79,44 +90,34 @@ export default {
       }
     }
   },
+  watch: {
+    above(above, wasAbove) {
+      if (wasAbove && this.visible && this.animateAbove) this.setAnimation('InDown')
+    },
+    below(below, wasBelow) {
+      if (wasBelow && this.visible && this.animateBelow) this.setAnimation('InUp')
+    },
+    visible(isVisible, wasVisible) {
+      if (wasVisible && this.above && this.animateAbove) this.setAnimation('OutUp') 
+      if (wasVisible && this.below && this.animateBelow) this.setAnimation('OutDown') 
+    }
+  },
   methods: {
     getRandomHeight() {
       const max = window.innerHeight
       const min = 100
       return Math.floor(Math.random() * (max - min + 1)) + min;
     },
-    setViewportValues({above, below, isInView}) {
-      this.above = above
-      this.below = below
-      this.visible = !above && !below
-    },
     setAnimation(type) {
       this.animationClass = this.animationType + type
     },
-    handleEnterFromBottom(vp) {
-      this.setViewportValues(vp)
-      if (this.animateBelow) {
-        this.setAnimation('InUp')
-      }
+    handleVisibilityChange({visible, top, bottom}) {
+      const rect = this.$refs.container.getBoundingClientRect()
+      
+      this.visible = visible
+      this.top = rect.top
+      this.bottom = rect.bottom
     },
-    handleEnterFromTop(vp) {
-      this.setViewportValues(vp)
-      if (this.animateAbove) {
-        this.setAnimation('InDown')
-      }
-    },
-    handleLeaveToBottom(vp) {
-      this.setViewportValues(vp)
-      if (this.animateBelow) {
-        this.setAnimation('OutDown')
-      }
-    },
-    handleLeaveToTop(vp) {
-      this.setViewportValues(vp)
-      if (this.animateAbove) {
-        this.setAnimation('OutUp')
-      }
-    }
   }
 }
 </script>

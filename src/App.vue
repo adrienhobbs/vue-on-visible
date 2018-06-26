@@ -70,7 +70,7 @@ export default {
       animationDurationMs: 580,
       animateAbove: true,
       animateBelow: true,
-      numItems: 50,
+      numItems: 10,
       animation: 'fade',
       yoyo: true
     }
