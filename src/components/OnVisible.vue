@@ -1,6 +1,6 @@
 <template>
   <OnVisibleEmitter :yoyo="yoyo"
-                    :threshold="0.4"
+                    :offset="offsets"
                     v-on:initial-visibility="setViewportValues"
                     v-on:enter:from-bottom="handleEnterFromBottom"
                     v-on:enter:from-top="handleEnterFromTop"

@@ -1,4 +1,4 @@
-import { isAbove, isBelow } from './utils'
+import { isAbove, isBelow, getOffset } from './utils'
 
 // @TODO THRESHOLD OR OFFSET
 export default {
@@ -29,7 +29,7 @@ export default {
       type: Number
     },
     threshold: {
-      default: 0.2
+      default: 0
     }
   },
   computed: {
@@ -58,7 +58,7 @@ export default {
     }
   },
   mounted() {
-    const threshold = this.threshold || this.buildThresholdList(this.accuracy)
+    const threshold = this.buildThresholdList(this.accuracy)
     this.observer = new IntersectionObserver(this.handleObserver, {
       root: null,
       threshold
@@ -66,15 +66,23 @@ export default {
     this.observer.observe(this.$refs.container)
   },
   methods: {
-    getOffset(loc, height) {
-      // handle issue when element height is smaller than offset.
-      if (!this.threshold) {
-        return height < Math.abs(this.offset[loc])
-          ? Math.sign(this.offset[loc]) * height
-          : this.offset[loc]
-      } else {
-        return height * -this.threshold
+    getTopOffset: getOffset('top'),
+    getBottomOffset: getOffset('bottom'),
+    updateVp({ top, bottom, height }) {
+      const offsetArgs = {
+        height,
+        offset: this.offset,
+        threshold: this.threshold
       }
+      this.above = isAbove({
+        bottom,
+        offset: this.getTopOffset(offsetArgs)
+      })
+      this.below = isBelow({
+        top,
+        offset: this.getBottomOffset(offsetArgs)
+      })
+      this.isInView = !this.above && !this.below
     },
     buildThresholdList(numSteps) {
       var thresholds = []
@@ -84,7 +92,8 @@ export default {
         thresholds.push(ratio)
       }
 
-      thresholds.push(0)
+      thresholds.push(0, this.threshold)
+
       return thresholds
     },
     emitEvent(event) {
@@ -93,11 +102,7 @@ export default {
     handleObserver(entries) {
       entries.forEach(entry => {
         const { top, height, bottom } = entry.boundingClientRect
-        this.top = top
-        this.bottom = bottom
-        this.above = isAbove({ bottom, offset: this.getOffset('top', height) })
-        this.below = isBelow({ top, offset: this.getOffset('bottom', height) })
-        this.isInView = !this.above && !this.below
+        this.updateVp({ top, bottom, height })
 
         if (!this.hasEntered) {
           this.hasEntered = true

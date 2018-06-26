@@ -6,8 +6,7 @@
                  :animateAbove="animateAbove"
                  :animateBelow="animateBelow"
                  :animationType="animation"
-                 :offset="{top: -150, bottom: -155}"
-                 :yoyo="yoyo"
+                 :yoyo="true"
                  :key="i">
         <div class="yah"
              :style="{ backgroundColor: color.bg}"></div>
@@ -47,7 +46,8 @@
         <br>
         <input type="number"
                v-model="numItems"
-               min="50">
+               min="50"
+               max="500">
 
       </div>
     </div>
@@ -65,7 +65,7 @@ export default {
       animationDurationMs: 580,
       animateAbove: true,
       animateBelow: true,
-      numItems: 10,
+      numItems: 30,
       animation: 'fade',
       yoyo: true
     }
