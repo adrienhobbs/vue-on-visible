@@ -1,6 +1,8 @@
 import { isAbove, isBelow, getOffset } from './utils'
 
-// @TODO THRESHOLD OR OFFSET
+// @todo directive
+// refactor logic into its own module
+// that can be used by a directive
 export default {
   name: 'OnVisibleEventEmitter',
   data() {
@@ -82,6 +84,7 @@ export default {
         top,
         offset: this.getBottomOffset(offsetArgs)
       })
+
       this.isInView = !this.above && !this.below
     },
     buildThresholdList(numSteps) {
@@ -107,7 +110,6 @@ export default {
         if (!this.hasEntered) {
           this.hasEntered = true
           this.$emit('initial-visibility', {
-            visible: this.isInView,
             above: this.above,
             below: this.below
           })

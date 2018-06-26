@@ -5,14 +5,12 @@
                     v-on:enter:from-bottom="handleEnterFromBottom"
                     v-on:enter:from-top="handleEnterFromTop"
                     v-on:exit:to-top="handleLeaveToTop"
+                    :threshold="threshold"
                     v-on:exit:to-bottom="handleLeaveToBottom">
     <div :class="className"
          class="item"
          :style="{ animationDuration: durationMs + 'ms', height: height + 'px'}"
          v-on:animationend="animationClass = false">
-      <img :src="'https://source.unsplash.com/random/1920x' + height"
-           style="object-fit: cover;"
-           alt="">
       <slot />
     </div>
   </OnVisibleEmitter>
@@ -48,6 +46,10 @@ export default {
     yoyo: {
       type: Boolean,
       default: false
+    },
+    threshold: {
+      type: Number,
+      default: 0
     }
   },
   data() {
@@ -86,7 +88,7 @@ export default {
     setViewportValues({above, below, isInView}) {
       this.above = above
       this.below = below
-      this.visible = isInView
+      this.visible = !above && !below
     },
     setAnimation(type) {
       this.animationClass = this.animationType + type
