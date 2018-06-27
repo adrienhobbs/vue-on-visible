@@ -82,8 +82,8 @@ export default {
       return new Array(num).fill('').map((i, idx) => {
         return {
           bg: `hsl(${(idx * 2 / num) * 360},100%,50%)`
-        };
-		  })
+        }
+      }) 
     }
   },
   methods: {

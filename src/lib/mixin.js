@@ -2,6 +2,7 @@
 // refactor logic into its own module
 // that can be used by a directive
 // use same observer?
+require('./polyfills')
 
 export default {
   name: 'OnVisibleEventEmitter',

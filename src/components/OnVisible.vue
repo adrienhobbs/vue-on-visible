@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import {OnVisibleEmitter} from './lib/index'
+import OnVisibleEmitter from './OnVisibleEmitter'
 
 export default {
   name: 'OnVisible',

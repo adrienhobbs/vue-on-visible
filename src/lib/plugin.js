@@ -1,4 +1,4 @@
-import * as Components from '../index'
+import * as Components from './index'
 import Vue from 'vue'
 
 const OnVisiblePlugin = {

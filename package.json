@@ -1,12 +1,14 @@
 {
   "name": "vue-on-visible",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "deploy-page": "gh-pages -d dist"
+    "deploy-page": "gh-pages -d dist",
+    "build-deploy": "yarn build && yarn deploy-page",
+    "build-lib": "vue-cli-service build --target lib --name vue-on-visible src/lib/index.js"
   },
   "dependencies": {
     "vue": "^2.5.16"
@@ -32,6 +34,13 @@
       "parser": "babel-eslint"
     }
   },
+  "files": [
+    "dist/*",
+    "src/*",
+    "public/*",
+    "*.json",
+    "*.js"
+  ],
   "postcss": {
     "plugins": {
       "autoprefixer": {}
@@ -43,7 +52,7 @@
     "not ie <= 8"
   ],
   "description": "vue-on-visible",
-  "main": "babel.config.js",
+  "main": "dist/vue-on-visible.common.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/adrienhobbs/vue-on-visible.git"

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
-import OnVisible from './components'
+import OnVisible from './lib/index'
+
 Vue.use(OnVisible)
 
 Vue.config.productionTip = false

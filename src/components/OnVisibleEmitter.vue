@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import Mixin from './mixin'
+import Mixin from '../lib/mixin'
 
 export default {
   name: 'OnVisibleEmitter',
