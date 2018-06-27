@@ -44,6 +44,7 @@ export default {
       if (!wasYoyo && yoyo) this.observer.observe(this.$refs.container)
     },
     isInView(isInView, wasInView) {
+      this.hasEntered = true
       var animation
       if (isInView && !this.yoyo) {
         this.observer.unobserve(this.$el)
@@ -139,7 +140,6 @@ export default {
         this.isInView = entry.intersectionRatio > 0
         this.entry = entry
       })
-      this.hasEntered = true
     }
   }
 }
