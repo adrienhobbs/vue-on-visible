@@ -7,8 +7,9 @@
                  :animateBelow="animateBelow"
                  :animationType="animation"
                  :yoyo="yoyo"
+                 :offset="-200"
                  :key="i">
-        <div class="yah"
+        <div class="box"
              :style="{ backgroundColor: color.bg}"></div>
       </OnVisible>
     </div>
@@ -67,12 +68,12 @@ export default {
   data() {
     return {
       controls: false,
-      animationDurationMs: 580,
+      animationDurationMs: 650,
       animateAbove: true,
       animateBelow: true,
-      numItems: 10,
+      numItems: 100,
       animation: 'fade',
-      yoyo: true
+      yoyo: true,
     }
   },
   computed: {
@@ -80,9 +81,14 @@ export default {
       const num = parseInt(this.numItems) || 1
       return new Array(num).fill('').map((i, idx) => {
         return {
-          bg: `hsl(${(idx / num) * 360},100%,50%)`
+          bg: `hsl(${(idx * 2 / num) * 360},100%,50%)`
         };
 		  })
+    }
+  },
+  methods: {
+    getRandomHeight() {
+      return Math.floor(Math.random() * (500 - 150 + 1)) + 150
     }
   }
 }
@@ -91,22 +97,13 @@ export default {
 
 <style>
 body {
-  background: #403d3d;
+  background-color: #262626;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
-.offset {
-  width: 100%;
-  height: 2px;
-  left: 0;
-  background: black;
-  position: fixed;
-}
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
+
 .controls {
   background: white;
   padding: 10px;
@@ -120,9 +117,7 @@ body {
   display: grid;
   max-width: 768px;
   justify-self: center;
-  /* grid-template-columns: repeat(2, 50px 1fr) 100px; */
-  grid-template-columns: repeat(1, 1fr);
-  grid-gap: 30px;
+  grid-gap: 10px;
   margin: auto;
 }
 .control {
@@ -134,12 +129,8 @@ body {
 .control.checkbox label {
   display: inline-block;
 }
-
-.yah {
-  /* display: none; */
-  /* opacity: 0.5; */
+.box {
+  height: 34vh;
   width: 100%;
-  height: 100%;
-  position: absolute;
 }
 </style>
