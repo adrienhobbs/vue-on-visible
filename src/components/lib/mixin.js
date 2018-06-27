@@ -1,20 +1,28 @@
-import { isAbove, isBelow, getOffset } from './utils'
-
 // @todo directive
 // refactor logic into its own module
 // that can be used by a directive
+// use same observer?
+
 export default {
   name: 'OnVisibleEventEmitter',
   data() {
     return {
-      hasEntered: false,
-      // isInView: false,
-      top: 0,
-      height: 0,
-      bottom: 0
+      entry: {},
+      bottom: false,
+      top: false,
+      isInView: null,
+      hasEntered: false
     }
   },
   props: {
+    animateAbove: {
+      default: false,
+      type: Boolean
+    },
+    animateBelow: {
+      default: true,
+      type: Boolean
+    },
     offset: {
       default: 0,
       required: false
@@ -25,105 +33,112 @@ export default {
       type: Boolean
     },
     accuracy: {
-      default: 20,
+      default: 60,
       required: false,
       type: Number
-    },
-    threshold: {
-      default: 0
-    }
-  },
-  computed: {
-    viewport() {
-      return {
-        isInView: this.isInView,
-        above: this.above,
-        below: this.below
-      }
-    },
-    rect() {
-      return this.$refs.container.getBoundingClientRect()
-    },
-    offsetArgs() {
-      return {
-        height: this.height,
-        offset: this.offset,
-        threshold: this.threshold
-      }
-    },
-    above() {
-      return isAbove({
-        bottom: this.bottom,
-        offset: this.getTopOffset(this.offsetArgs)
-      })
-    },
-    below() {
-      return isBelow({
-        top: this.top,
-        offset: this.getBottomOffset(this.offsetArgs)
-      })
-    },
-    isInView() {
-      return !this.above && !this.below
     }
   },
   watch: {
-    isInView(isInView) {
-      this.$emit('visibility-change', {
-        visible: isInView,
-        bottom: this.bottom,
-        top: this.top,
-        height: this.height
-      })
-      if (isInView && !this.yoyo) this.observer.unobserve(this.$refs.container)
-    },
     yoyo(yoyo, wasYoyo) {
       if (!wasYoyo && yoyo) this.observer.observe(this.$refs.container)
+    },
+    isInView(isInView, wasInView) {
+      var animation
+      if (isInView && !this.yoyo) {
+        this.observer.unobserve(this.$el)
+      }
+      // Entering Elements
+      if (!wasInView) {
+        if (this.enteringFromBottom()) {
+          animation = 'InUp'
+          this.$emit(
+            'enter-from-bottom',
+            this.getEmitProps({ animation, isInView })
+          )
+        } else if (this.enteringFromTop()) {
+          animation = 'InDown'
+          this.$emit(
+            'enter-from-top',
+            this.getEmitProps({ animation, isInView })
+          )
+        }
+        // Exiting Elements
+      } else if (!isInView) {
+        if (this.exitingToBottom()) {
+          animation = 'OutDown'
+          this.$emit('exit-to-top', this.getEmitProps({ animation, isInView }))
+        } else if (this.exitingToTop()) {
+          animation = 'OutUp'
+          this.$emit(
+            'exit-to-bottom',
+            this.getEmitProps({ animation, isInView })
+          )
+        }
+      }
+
+      this.$emit(
+        'visibility-change',
+        this.getEmitProps({ isInView, animation })
+      )
     }
   },
   mounted() {
-    const threshold = this.buildThresholdList(this.accuracy)
     this.observer = new IntersectionObserver(this.handleObserver, {
       root: null,
-      threshold
+      rootMargin: `${this.offset.top}px 0px ${this.offset.bottom}px 0px`,
+      threshold: this.buildThresholdList(this.accuracy)
     })
-    this.observer.observe(this.$refs.container)
+    this.observer.observe(this.$el)
   },
   methods: {
-    getTopOffset: getOffset('top'),
-    getBottomOffset: getOffset('bottom'),
+    getEmitProps({ isInView, animation }) {
+      return {
+        animation,
+        visible: isInView,
+        isAbove:
+          this.entry.boundingClientRect.bottom < this.entry.rootBounds.top,
+        isBelow:
+          this.entry.boundingClientRect.top > this.entry.rootBounds.bottom
+      }
+    },
+    enteringFromTop() {
+      return (
+        this.top < this.entry.rootBounds.top &&
+        this.bottom > this.entry.rootBounds.top &&
+        this.animateAbove
+      )
+    },
+    enteringFromBottom() {
+      return (
+        this.top < this.entry.rootBounds.bottom &&
+        this.bottom > this.entry.rootBounds.bottom &&
+        this.animateBelow
+      )
+    },
+    exitingToTop() {
+      return this.bottom < this.entry.rootBounds.top && this.animateAbove
+    },
+    exitingToBottom() {
+      return this.top > this.entry.rootBounds.bottom && this.animateBelow
+    },
     buildThresholdList(numSteps) {
       var thresholds = []
-
       for (var i = 1.0; i <= numSteps; i++) {
         var ratio = i / numSteps
         thresholds.push(ratio)
       }
-
-      thresholds.push(0, this.threshold)
-
+      thresholds.push(0)
       return thresholds
-    },
-    emitEvent(event) {
-      this.$emit(event, this.viewport)
     },
     handleObserver(entries) {
       entries.forEach(entry => {
-        const { top, height, bottom } = entry.boundingClientRect
+        const { bottom, top } = entry.boundingClientRect
         this.top = top
-        this.height = height
         this.bottom = bottom
-
-        if (!this.hasEntered) {
-          this.hasEntered = true
-          this.$emit('initial-visibility', {
-            visible: this.isInView,
-            top,
-            bottom,
-            height
-          })
-        }
+        this.isInView = entry.intersectionRatio > 0
+        this.entry = entry
       })
+      this.hasEntered = true
     }
   }
 }

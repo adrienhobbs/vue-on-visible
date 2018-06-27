@@ -1,13 +1,13 @@
 <template>
   <OnVisibleEmitter :yoyo="yoyo"
                     :offset="offsets"
-                    v-on:initial-visibility="handleVisibilityChange"
-                    v-on:visibility-change="handleVisibilityChange"
-                    :threshold="threshold">
-    <div :class="className"
-         ref="container"
-         class="item"
-         :style="{ animationDuration: durationMs + 'ms', height: height + 'px'}"
+                    :animateAbove="animateAbove"
+                    :animateBelow="animateBelow"
+                    v-on:visibility-change="handleVisibilityChange">
+    <div ref="container"
+         class="on-visible__container"
+         :class="className"
+         :style="{ animationDuration: durationMs + 'ms'}"
          v-on:animationend="animationClass = false">
       <slot />
     </div>
@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import { isAbove, isBelow, getTopOffset, getBottomOffset } from './lib/utils'
 import {OnVisibleEmitter} from './lib/index'
 
 export default {
@@ -45,19 +44,15 @@ export default {
     yoyo: {
       type: Boolean,
       default: false
-    },
-    threshold: {
-      type: Number,
-      default: 0
     }
   },
   data() {
     return {
-      height: this.getRandomHeight(),
-      top: 0,
-      bottom: 0,
+      isAbove: false,
+      isBelow: false,
       visible: false,
       animationClass: false,
+      hasFired: false
     }
   },
   computed: {
@@ -69,55 +64,25 @@ export default {
         return {top: this.offset, bottom: this.offset}
       }
     },
-    above() {
-      return isAbove({
-        bottom: this.bottom,
-        offset: getTopOffset({height: this.height, threshold: this.threshold, offset: this.offsets})
-      })
-    },
-    below() {
-      return isBelow({
-        top: this.top,
-        offset: getBottomOffset({height: this.height, threshold: this.threshold, offset: this.offsets})
-      })
-    },
     className() {
       return {
-        above: this.above && this.animateAbove,
-        below: this.below && this.animateBelow,
+        above: this.isAbove && this.animateAbove,
+        below: this.isBelow && this.animateBelow,
         animated: this.animationClass,
         [this.animationClass]: this.animationClass
       }
     }
   },
-  watch: {
-    above(above, wasAbove) {
-      if (wasAbove && this.visible && this.animateAbove) this.setAnimation('InDown')
-    },
-    below(below, wasBelow) {
-      if (wasBelow && this.visible && this.animateBelow) this.setAnimation('InUp')
-    },
-    visible(isVisible, wasVisible) {
-      if (wasVisible && this.above && this.animateAbove) this.setAnimation('OutUp') 
-      if (wasVisible && this.below && this.animateBelow) this.setAnimation('OutDown') 
-    }
-  },
   methods: {
-    getRandomHeight() {
-      const max = window.innerHeight
-      const min = 100
-      return Math.floor(Math.random() * (max - min + 1)) + min;
+    setAnimation(animation) {
+      this.animationClass = this.animationType + animation
     },
-    setAnimation(type) {
-      this.animationClass = this.animationType + type
-    },
-    handleVisibilityChange({visible, top, bottom}) {
-      const rect = this.$refs.container.getBoundingClientRect()
-      
+    handleVisibilityChange({visible, animation, isAbove, isBelow}) {
       this.visible = visible
-      this.top = rect.top
-      this.bottom = rect.bottom
-    },
+      this.isAbove = isAbove
+      this.isBelow = isBelow
+      if (animation) this.setAnimation(animation)
+    }
   }
 }
 </script>
@@ -139,8 +104,8 @@ export default {
 
 @keyframes fadeInUp {
   from {
-    opacity: 0.3;
-    transform: translate3d(0, 160px, 0);
+    opacity: 0;
+    transform: translate3d(0, 10%, 0);
   }
 
   to {
@@ -152,7 +117,7 @@ export default {
 @keyframes fadeInDown {
   from {
     opacity: 0;
-    transform: translate3d(0, -60px, 0);
+    transform: translate3d(0, -10%, 0);
   }
 
   to {
@@ -168,7 +133,7 @@ export default {
 
   to {
     opacity: 0;
-    transform: translate3d(0, -60px, 0);
+    transform: translate3d(0, -10%, 0);
   }
 }
 
@@ -178,7 +143,7 @@ export default {
   }
   to {
     opacity: 0;
-    transform: translate3d(0, 60px, 0);
+    transform: translate3d(0, 10%, 0);
   }
 }
 @keyframes zoomInUp {
@@ -217,7 +182,7 @@ export default {
 
   to {
     opacity: 0;
-    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, 2000px, 0);
+    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, 10%, 0);
     transform-origin: center bottom;
     animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
   }
@@ -236,7 +201,7 @@ export default {
 
   to {
     opacity: 0;
-    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -2000px, 0);
+    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -10%, 0);
     transform-origin: center bottom;
     animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
   }
@@ -244,7 +209,7 @@ export default {
 
 .zoomOutUp {
   animation-name: zoomOutUp;
-  transform-origin: center bottom;
+  transform-origin: center top;
 }
 
 .zoomInDown {
@@ -296,30 +261,11 @@ export default {
 
 .on-visible__container {
   perspective: 500px;
-  margin: 30px;
-}
-
-.on-visible__container.visible {
-  opacity: 1;
 }
 
 .above,
 .below {
   opacity: 0;
-}
-.item {
-  background-size: cover;
-  display: flex;
-  height: 100%;
-  position: relative;
-  /* margin: 30px auto 30px auto; */
-  /* width: 600px; */
-  /* border: 2px solid whitesmoke; */
-}
-
-.item > img {
-  object-fit: cover;
-  width: 100%;
 }
 </style>
 
