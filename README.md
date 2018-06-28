@@ -1,4 +1,4 @@
-# vue-observe-visibility
+# Vue-On-Visible
 
 Docs To Come.
 
