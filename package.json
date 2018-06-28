@@ -59,7 +59,12 @@
   },
   "keywords": [
     "scroll",
-    "intersection-observer"
+    "intersection-observer",
+    "vue",
+    "vue.js",
+    "visibility",
+    "visible",
+    "animations"
   ],
   "author": "Adrien Hobbs",
   "license": "ISC",
