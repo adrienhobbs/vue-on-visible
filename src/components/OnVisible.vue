@@ -48,14 +48,14 @@ export default {
   },
   data() {
     return {
-      isAbove: false,
-      isBelow: false,
       visible: false,
-      animationClass: false,
-      hasFired: false
+      animationClass: false
     }
   },
   computed: {
+    // creates default offset object
+    // allows user to pass in single number for both offsets
+    // or top & bottom offsets respectively
     offsets() {
       const defaultOffset = {top: 0, bottom: 0}
       if (typeof this.offset === 'object') {
@@ -66,43 +66,55 @@ export default {
     },
     className() {
       return {
-        above: this.isAbove && this.animateAbove,
-        below: this.isBelow && this.animateBelow,
-        animated: this.animationClass,
+        ['on-visible__is-visible']: this.visible,
         [this.animationClass]: this.animationClass
       }
     }
   },
   methods: {
     setAnimation(animation) {
-      this.animationClass = this.animationType + animation
+      this.animationClass = animation ? `${this.animationType}-${animation.location}` : ''
     },
-    handleVisibilityChange({visible, animation, isAbove, isBelow}) {
+    handleVisibilityChange({visible, animation}) {
       this.visible = visible
-      this.isAbove = isAbove
-      this.isBelow = isBelow
-      if (animation) this.setAnimation(animation)
+      this.setAnimation(animation)
     }
   }
 }
 </script>
+<style lang="scss">
+$animations: (
+  fadeFromBottom: fade-from-bottom,
+  fadeFromTop: fade-from-top,
+  fadeToBottom: fade-to-bottom,
+  fadeToTop: fade-to-top,
+  fadeIn: fade-in,
+  zoomIn: zoom-in,
+  zoomFromBottom: zoom-from-bottom,
+  zoomFromTop: zoom-from-top,
+  zoomToBottom: zoom-to-bottom,
+  zoomToTop: zoom-to-top
+);
 
-<style>
-@keyframes rotateXInUp {
-  from {
-    opacity: 0;
-    transform: rotateX(90deg);
-    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
-  }
-
-  60% {
-    opacity: 1;
-    transform: rotateX(20deg);
-    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+@each $animation, $animationClass in $animations {
+  .#{$animationClass} {
+    animation-name: $animation;
   }
 }
 
-@keyframes fadeInUp {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 2%, 300deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0%, 0);
+  }
+}
+
+@keyframes fadeFromBottom {
   from {
     opacity: 0;
     transform: translate3d(0, 10%, 0);
@@ -114,7 +126,7 @@ export default {
   }
 }
 
-@keyframes fadeInDown {
+@keyframes fadeFromTop {
   from {
     opacity: 0;
     transform: translate3d(0, -10%, 0);
@@ -126,7 +138,7 @@ export default {
   }
 }
 
-@keyframes fadeOutUp {
+@keyframes fadeToTop {
   from {
     opacity: 1;
   }
@@ -137,7 +149,7 @@ export default {
   }
 }
 
-@keyframes fadeOutDown {
+@keyframes fadeToBottom {
   from {
     opacity: 1;
   }
@@ -146,24 +158,39 @@ export default {
     transform: translate3d(0, 10%, 0);
   }
 }
-@keyframes zoomInUp {
+
+@keyframes zoomIn {
   from {
     opacity: 0;
-    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, 50%, 0);
+    transform: scale3d(0.5, 0.5, 0.5) translate3d(0, 0%, 0);
     animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
   }
 
-  60% {
+  to {
     opacity: 1;
-    transform: scale3d(0.475, 0.475, 0.475) translate3d(0, 30%, 0);
+    transform: scale3d(1, 1, 1) translate3d(0, 0%, 0);
     animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
   }
 }
 
-@keyframes zoomInDown {
+@keyframes zoomFromBottom {
   from {
     opacity: 0;
-    transform: scale3d(0.5, 0.5, 0.5) translate3d(0, -500px, 0);
+    transform: scale3d(0.5, 0.5, 0.5) translate3d(0, 10%, 0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale3d(1, 1, 1) translate3d(0, 0%, 0);
+    animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
+  }
+}
+
+@keyframes zoomFromTop {
+  from {
+    opacity: 0;
+    transform: scale3d(0.5, 0.5, 0.5) translate3d(0, -10%, 0);
     animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
   }
 
@@ -173,7 +200,7 @@ export default {
     animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
   }
 }
-@keyframes zoomOutDown {
+@keyframes zoomToBottom {
   from {
     opacity: 1;
     transform: scale3d(1, 1, 1) translate3d(0, 0, 0);
@@ -182,17 +209,13 @@ export default {
 
   to {
     opacity: 0;
-    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, 10%, 0);
+    transform: scale3d(0.5, 0.5, 0.5) translate3d(0, 10%, 0);
     transform-origin: center bottom;
     animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
   }
 }
 
-.zoomOutDown {
-  animation-name: zoomOutDown;
-}
-
-@keyframes zoomOutUp {
+@keyframes zoomToTop {
   from {
     opacity: 1;
     transform: scale3d(1, 1, 1) translate3d(0, 0px, 0);
@@ -201,71 +224,20 @@ export default {
 
   to {
     opacity: 0;
-    transform: scale3d(0.1, 0.1, 0.1) translate3d(0, -10%, 0);
+    transform: scale3d(0.5, 0.5, 0.5) translate3d(0, -10%, 0);
     transform-origin: center bottom;
     animation-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1);
   }
 }
 
-.zoomOutUp {
-  animation-name: zoomOutUp;
-  transform-origin: center top;
-}
-
-.zoomInDown {
-  animation-name: zoomInDown;
-  transform-origin: center top;
-}
-
-.zoomInUp {
-  animation: zoomInUp;
-}
-
-.fadeInUp {
-  animation-name: fadeInUp;
-}
-
-.fadeInDown {
-  animation-name: fadeInDown;
-}
-
-.fadeOutUp {
-  animation-name: fadeOutUp;
-}
-
-.fadeOutDown {
-  animation-name: fadeOutDown;
-}
-
-.rotateXInUp {
-  animation-name: rotateXInUp;
-}
-
-.above {
-  opacity: 0;
-}
-
-.below {
-  opacity: 0;
-}
-
-.animated {
-  animation-duration: 0.4s;
-  animation-fill-mode: both;
-  transform-origin: center bottom;
-}
-
-.hidden {
-  opacity: 0;
-}
-
 .on-visible__container {
   perspective: 500px;
+  opacity: 0;
 }
 
-.above,
-.below {
-  opacity: 0;
+.on-visible__container.on-visible__is-visible {
+  perspective: 500px;
+  opacity: 1;
 }
 </style>
 
