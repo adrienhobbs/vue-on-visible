@@ -40,22 +40,23 @@ export default {
   },
   watch: {
     yoyo(yoyo, wasYoyo) {
+      // observe element if yoyo toggled on from off
       if (!wasYoyo && yoyo) this.observer.observe(this.$refs.container)
     },
     isInView(isInView, wasInView) {
       var animation = false
+
       // stop observing element if it has entered the viewport & yoyo is false
       if (isInView && !this.yoyo) {
         this.observer.unobserve(this.$el)
       }
+
       // Entering Elements
       if (!wasInView && this.hasEntered) {
         if (this.enteringFromBottom()) {
           animation = { type: 'enter', location: 'from-bottom' }
         } else if (this.enteringFromTop()) {
           animation = { type: 'enter', location: 'from-top' }
-        } else if (this.yoyo) {
-          animation = { type: 'enter', location: 'in' }
         }
 
         // Exiting Elements
@@ -64,20 +65,21 @@ export default {
           animation = { type: 'exit', location: 'to-bottom' }
         } else if (this.exitingToTop()) {
           animation = { type: 'exit', location: 'to-top' }
-        } else {
-          animation = { type: 'exit', location: 'out' }
         }
       } else {
         this.hasEntered = true
       }
+
       this.$emit('visibility-change', { visible: this.isVisible, animation })
     }
   },
   computed: {
     isVisible() {
-      if (this.isAbove && !this.animateAbove) {
-        return true
-      } else if (this.isBelow && !this.animateBelow) {
+      // if we're not animating - make sure element is visible when above or below
+      if (
+        (this.isAbove && !this.animateAbove) ||
+        (this.isBelow && !this.animateBelow)
+      ) {
         return true
       } else {
         return (
@@ -102,7 +104,6 @@ export default {
   mounted() {
     this.observer = new IntersectionObserver(this.handleObserver, {
       root: null,
-      rootMargin: '0px',
       threshold: this.buildThresholdList(this.accuracy)
     })
     this.observer.observe(this.$el)
@@ -145,9 +146,6 @@ export default {
         this.entry = entry
 
         // Check if the element is in the visible portion of the viewport
-        // this.isInView =
-        //   this.bottom > entry.rootBounds.top - this.offset.top &&
-        //   this.top < entry.rootBounds.bottom + this.offset.bottom
         this.isInView = this.isVisible
       })
     }
