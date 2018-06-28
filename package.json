@@ -8,15 +8,12 @@
     "lint": "vue-cli-service lint",
     "deploy-page": "gh-pages -d dist",
     "build-deploy": "yarn build && yarn deploy-page",
-    "build-lib": "vue-cli-service build --target lib --name vue-on-visible src/lib/index.js",
-    "publish-npm": "yarn build-lib && npm publish --access public"
-  },
-  "dependencies": {
-    "node-sass": "^4.9.0",
-    "sass-loader": "^7.0.3",
-    "vue": "^2.5.16"
+    "build-lib": "vue-cli-service build --target lib --name vue-on-visible src/lib/index.js"
   },
   "devDependencies": {
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.3",
+    "vue": "^2.5.16",
     "@vue/cli-plugin-babel": "^3.0.0-rc.3",
     "@vue/cli-plugin-eslint": "^3.0.0-rc.3",
     "@vue/cli-service": "^3.0.0-rc.3",
