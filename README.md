@@ -66,5 +66,12 @@ Vue.use(OnVisible)
 ```
 
 # Usage
+Pass your component or markup as a `<slot>`:
+
+```javascript
+<OnVisible >
+  <div>My Awesome Component</div>
+</OnVisible>
+```
 
 # Example
