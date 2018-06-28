@@ -1,7 +1,7 @@
 <template>
   <div ref="container"
        style="color: white;">
-    <div v-show="hasEntered">
+    <div>
       <slot />
     </div>
   </div>
