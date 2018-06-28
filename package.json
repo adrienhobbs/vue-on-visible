@@ -12,6 +12,8 @@
     "publish-npm": "yarn build-lib && npm publish --access public"
   },
   "dependencies": {
+    "node-sass": "^4.9.0",
+    "sass-loader": "^7.0.3",
     "vue": "^2.5.16"
   },
   "devDependencies": {
