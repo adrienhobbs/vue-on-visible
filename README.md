@@ -4,7 +4,7 @@ A collection of Vue components aimed to help you create better interactions with
 
 [Demo](https://adrienhobbs.github.io/vue-on-visible/)
 
-This uses the [`Interaction Observer API`] (https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) and includes a [`polyfill`](https://github.com/w3c/IntersectionObserver/blob/master/polyfill/README.md) enabling support in the following browsers:
+This uses the [`Interaction Observer API`](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) and includes a [`polyfill`](https://github.com/w3c/IntersectionObserver/blob/master/polyfill/README.md) enabling support in the following browsers:
 <table>
   <tr>
     <td align="center">
