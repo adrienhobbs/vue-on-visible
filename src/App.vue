@@ -1,17 +1,17 @@
 <template>
   <div id="app">
     <div class="boxes">
-      <OnVisible v-for="(color, i) in colors"
-                 :durationMs="parseInt(animationDurationMs)"
-                 :animateAbove="animateAbove"
-                 :animateBelow="animateBelow"
-                 :animationType="animation"
-                 :yoyo="yoyo"
-                 :offset="-200"
-                 :key="i">
-        <div class="box"
-             :style="{ backgroundColor: color.bg}"></div>
-      </OnVisible>
+      <div v-for="(color, i) in colors"
+           :durationMs="parseInt(animationDurationMs)"
+           :animateAbove="animateAbove"
+           :animateBelow="animateBelow"
+           :animationType="animation"
+           :yoyo="yoyo"
+           :offset="-200"
+           :key="i">
+        <Test class="box"
+              :style="{ backgroundColor: color.bg}"></Test>
+      </div>
     </div>
     <div class="controls">
       <label for="checkbox">Toggle Controls</label>
@@ -62,16 +62,18 @@
 
 <script>
 // @todo using intersection ration make an animation ease
+import Test from './components/Test'
 
 export default {
   name: 'app',
+  components: {Test},
   data() {
     return {
       controls: false,
       animationDurationMs: 650,
       animateAbove: true,
       animateBelow: true,
-      numItems: 100,
+      numItems: 10,
       animation: 'fade',
       yoyo: true,
     }
@@ -87,6 +89,9 @@ export default {
     }
   },
   methods: {
+    testCb({isAbove, isBelow}) {
+      console.log(isAbove, isBelow)
+    },
     getRandomHeight() {
       return Math.floor(Math.random() * (500 - 150 + 1)) + 150
     }
