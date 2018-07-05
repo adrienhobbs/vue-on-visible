@@ -1,10 +1,15 @@
 # Vue-On-Visible
 
+### Under Active Development
+
+Not stable. API will change.
+
 A collection of Vue components aimed to help you create better interactions with as elements enter and exit the viewport.
 
 [Demo](https://adrienhobbs.github.io/vue-on-visible/)
 
 This uses the [`Interaction Observer API`](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) and includes a [`polyfill`](https://github.com/w3c/IntersectionObserver/blob/master/polyfill/README.md) enabling support in the following browsers:
+
 <table>
   <tr>
     <td align="center">
@@ -38,7 +43,6 @@ This uses the [`Interaction Observer API`](https://developer.mozilla.org/en-US/d
   </tr>
 </table>
 
-
 ---
 
 ## Table of contents
@@ -54,7 +58,9 @@ npm install --save vue-on-visible
 ```
 
 # Importing
+
 ### Option #1 - A Vue Plugin
+
 Provides global access to all components
 
 ```javascript
@@ -62,14 +68,14 @@ import Vue from 'vue'
 import OnVisible from 'vue-on-visible'
 
 Vue.use(OnVisible)
-
 ```
 
 # Usage
+
 Pass your component or markup as a `<slot>`:
 
 ```javascript
-<OnVisible >
+<OnVisible>
   <div>My Awesome Component</div>
 </OnVisible>
 ```
