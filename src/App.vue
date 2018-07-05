@@ -7,7 +7,6 @@
            :animateBelow="animateBelow"
            :animationType="animation"
            :yoyo="yoyo"
-           :offset="-200"
            :key="i">
         <Test class="box"
               :style="{ backgroundColor: color.bg}"></Test>
@@ -107,6 +106,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  margin-bottom: 200px;
 }
 
 .controls {

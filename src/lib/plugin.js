@@ -6,7 +6,7 @@ const OnVisiblePlugin = {
   install: function() {
     Vue.directive('on-visible', {
       bind(elm, binding, vnode) {
-        observer.observe({ elm, cb: binding.value.callback, vnode })
+        observer.observe({ elm, ...binding.value, vnode })
       },
       inserted(el) {}
     })
