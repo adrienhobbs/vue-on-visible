@@ -8,8 +8,13 @@
            :animationType="animation"
            :yoyo="yoyo"
            :key="i">
-        <Test class="box"
-              :style="{ backgroundColor: color.bg}"></Test>
+        <OnVisible>
+          <div slot-scope="viewport"
+               class="box">
+            <ScopeTest :viewport="viewport"
+                       :style="{ backgroundColor: color.bg}"></ScopeTest>
+          </div>
+        </OnVisible>
       </div>
     </div>
     <div class="controls">
@@ -61,11 +66,12 @@
 
 <script>
 // @todo using intersection ration make an animation ease
-import Test from './components/Test'
+import OnVisible from './components/OnVisible'
+import ScopeTest from './components/ScopeTest'
 
 export default {
   name: 'app',
-  components: {Test},
+  components: {OnVisible, ScopeTest},
   data() {
     return {
       controls: false,
@@ -88,9 +94,6 @@ export default {
     }
   },
   methods: {
-    testCb({isAbove, isBelow}) {
-      console.log(isAbove, isBelow)
-    },
     getRandomHeight() {
       return Math.floor(Math.random() * (500 - 150 + 1)) + 150
     }
@@ -135,7 +138,7 @@ body {
   display: inline-block;
 }
 .box {
-  height: 34vh;
+  height: 89vh;
   width: 100%;
 }
 </style>
