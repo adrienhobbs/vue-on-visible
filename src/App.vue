@@ -8,7 +8,14 @@
           <div slot-scope="onVisible"
                class="box"
                :style="{backgroundColor: color.bg}">
-            {{onVisible.viewport}}
+            <div style="position: relative; width: 100%; height: 100%">
+              <div style="top: 10px; position: absolute;">
+                {{onVisible.viewport}}
+              </div>
+              <div style="bottom: 10px; position: absolute;">
+                {{onVisible.viewport}}
+              </div>
+            </div>
           </div>
         </OnVisible>
       </div>
@@ -18,11 +25,10 @@
 
 <script>
 import OnVisible from './components/OnVisible'
-import ScopeTest from './components/ScopeTest'
 
 export default {
   name: 'app',
-  components: {OnVisible, ScopeTest},
+  components: {OnVisible},
   data() {
     return {
       numItems: 40,
@@ -56,6 +62,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   margin-bottom: 200px;
+  font-size: 19px;
 }
 
 .boxes {

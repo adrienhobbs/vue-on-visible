@@ -16,7 +16,7 @@ export default {
     },
     yoyo: {
       type: Boolean,
-      default: true,
+      default: false,
     }
   },
   data() {
