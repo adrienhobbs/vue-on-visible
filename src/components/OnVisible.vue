@@ -32,7 +32,8 @@ export default {
   },
   methods: {
     updateState(item) {
-      const props = [
+      // copy properties we want to component data.
+      [
         'rect',
         'isAbove', 
         'isBelow', 
