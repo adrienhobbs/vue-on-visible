@@ -51,11 +51,8 @@ const Observer = (function() {
     items.push(newItem)
   }
 
-  const unobserve = elm => {}
-
   return {
-    observe,
-    unobserve
+    observe
   }
 })()
 
