@@ -1,17 +1,21 @@
 <template>
   <div id="app">
     <div class="boxes">
-      <OnVisible v-for="(color, i) in colors"
-                 :durationMs="parseInt(animationDurationMs)"
-                 :animateAbove="animateAbove"
-                 :animateBelow="animateBelow"
-                 :animationType="animation"
-                 :yoyo="yoyo"
-                 :offset="-200"
-                 :key="i">
-        <div class="box"
-             :style="{ backgroundColor: color.bg}"></div>
-      </OnVisible>
+      <div v-for="(color, i) in colors"
+           :durationMs="parseInt(animationDurationMs)"
+           :animateAbove="animateAbove"
+           :animateBelow="animateBelow"
+           :animationType="animation"
+           :yoyo="yoyo"
+           :key="i">
+        <OnVisible>
+          <div slot-scope="viewport"
+               class="box">
+            <ScopeTest :viewport="viewport"
+                       :style="{ backgroundColor: color.bg}"></ScopeTest>
+          </div>
+        </OnVisible>
+      </div>
     </div>
     <div class="controls">
       <label for="checkbox">Toggle Controls</label>
@@ -62,16 +66,19 @@
 
 <script>
 // @todo using intersection ration make an animation ease
+import OnVisible from './components/OnVisible'
+import ScopeTest from './components/ScopeTest'
 
 export default {
   name: 'app',
+  components: {OnVisible, ScopeTest},
   data() {
     return {
       controls: false,
       animationDurationMs: 650,
       animateAbove: true,
       animateBelow: true,
-      numItems: 100,
+      numItems: 10,
       animation: 'fade',
       yoyo: true,
     }
@@ -102,6 +109,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  margin-bottom: 200px;
 }
 
 .controls {
@@ -130,7 +138,7 @@ body {
   display: inline-block;
 }
 .box {
-  height: 34vh;
+  height: 89vh;
   width: 100%;
 }
 </style>
