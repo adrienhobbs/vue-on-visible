@@ -1,3 +1,5 @@
+import ObserverItem from './observer-item'
+
 const Observer = (function() {
   const items = []
   const Observers = {}
@@ -9,50 +11,6 @@ const Observer = (function() {
     }
     thresholds.push(0)
     return thresholds
-  }
-  const Item = {
-    get isPartiallyBelow() {
-      return (
-        this.bottom > this.bottomThreshold && this.top < this.bottomThreshold
-      )
-    },
-    get isVisible() {
-      return this.intersectionRatio > 0
-    },
-    get isPartiallyAbove() {
-      return this.top < this.topThreshold && this.bottom > this.topThreshold
-    },
-    get bottom() {
-      return this.rect.bottom
-    },
-    get top() {
-      return this.rect.top
-    },
-    get rect() {
-      return this.entry.boundingClientRect || this.elm.getBoundingClientRect()
-    },
-    get bottomThreshold() {
-      return this.entry.rootBounds.bottom
-    },
-    get topThreshold() {
-      return this.entry.rootBounds.top
-    },
-    get isAbove() {
-      return this.bottom < this.topThreshold
-    },
-    get isBelow() {
-      return this.top > this.bottomThreshold
-    },
-    get intersectionRatio() {
-      return this.entry.intersectionRatio
-    },
-    update(entry) {
-      this.entry = entry
-      this.callback(this)
-      if (entry.intersectionRatio === 1 && !this.yoyo) {
-        this.observer.unobserve(this.elm)
-      }
-    }
   }
 
   const handleUpdate = entries => {
@@ -76,8 +34,10 @@ const Observer = (function() {
     offsets = { top: 0, bottom: 0 },
     yoyo = false
   }) => {
-    const newItem = Object.create(Item)
+    const newItem = Object.create(ObserverItem)
     const rootMargin = `${offsets.top} 0px ${offsets.bottom} 0px`
+
+    // if an observer with the same root margin exists, use it, otherwise create a new one.
     Observers[rootMargin] = Observers[rootMargin] || createObserver(rootMargin)
     Observers[rootMargin].observe(elm)
 
@@ -91,8 +51,11 @@ const Observer = (function() {
     items.push(newItem)
   }
 
+  const unobserve = elm => {}
+
   return {
-    observe
+    observe,
+    unobserve
   }
 })()
 
