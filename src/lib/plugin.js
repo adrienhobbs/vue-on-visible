@@ -7,8 +7,7 @@ const OnVisiblePlugin = {
     Vue.directive('on-visible', {
       bind(elm, binding, vnode) {
         observer.observe({ elm, ...binding.value, vnode })
-      },
-      inserted(el) {}
+      }
     })
     Object.keys(Components)
       .filter(componentName => componentName !== 'default')
