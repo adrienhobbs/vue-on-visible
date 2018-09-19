@@ -2,70 +2,21 @@
   <div id="app">
     <div class="boxes">
       <div v-for="(color, i) in colors"
-           :durationMs="parseInt(animationDurationMs)"
-           :animateAbove="animateAbove"
-           :animateBelow="animateBelow"
-           :animationType="animation"
            :yoyo="yoyo"
            :key="i">
-        <OnVisible>
-          <div slot-scope="viewport"
-               class="box">
-            <ScopeTest :viewport="viewport"
-                       :style="{ backgroundColor: color.bg}"></ScopeTest>
+        <OnVisible :yoyo="yoyo">
+          <div slot-scope="onVisible"
+               class="box"
+               :style="{backgroundColor: color.bg}">
+            {{onVisible.viewport}}
           </div>
         </OnVisible>
-      </div>
-    </div>
-    <div class="controls">
-      <label for="checkbox">Toggle Controls</label>
-      <input type="checkbox"
-             v-model="controls">
-      <div class="select"
-           v-if="controls">
-        <div class="control">
-          <label for="">Effect</label>
-          <select v-model="animation">
-            <option value="fade">Fade</option>
-            <option value="zoom">Zoom</option>
-          </select>
-        </div>
-        <div class="control">
-          <label for="checkbox">YoYo</label>
-          <input type="checkbox"
-                 v-model="yoyo">
-        </div>
-        <div class="control checkbox">
-          <label for="checkbox">Animate Above</label>
-          <input type="checkbox"
-                 v-model="animateAbove">
-        </div>
-        <div class="control checkbox">
-          <label for="checkbox">Animate Below</label>
-          <input type="checkbox"
-                 v-model="animateBelow">
-        </div>
-        <div class="control">
-          <label for="">Duration in Ms</label>
-          <input type="number"
-                 v-model="animationDurationMs"
-                 min="100"
-                 step="50">
-        </div>
-        <div class="control">
-          <label for="">Number of items</label>
-          <input type="number"
-                 v-model="numItems"
-                 min="50"
-                 max="500">
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// @todo using intersection ration make an animation ease
 import OnVisible from './components/OnVisible'
 import ScopeTest from './components/ScopeTest'
 
@@ -74,13 +25,8 @@ export default {
   components: {OnVisible, ScopeTest},
   data() {
     return {
-      controls: false,
-      animationDurationMs: 650,
-      animateAbove: true,
-      animateBelow: true,
-      numItems: 10,
-      animation: 'fade',
-      yoyo: true,
+      numItems: 40,
+      yoyo: true
     }
   },
   computed: {
@@ -112,15 +58,6 @@ body {
   margin-bottom: 200px;
 }
 
-.controls {
-  background: white;
-  padding: 10px;
-  position: fixed;
-  top: 30px;
-  left: 30px;
-  border: 3px solid #e6e6e6;
-}
-
 .boxes {
   display: grid;
   max-width: 768px;
@@ -128,15 +65,7 @@ body {
   grid-gap: 10px;
   margin: auto;
 }
-.control {
-  margin-top: 15px;
-}
-.control label {
-  display: block;
-}
-.control.checkbox label {
-  display: inline-block;
-}
+
 .box {
   height: 89vh;
   width: 100%;
