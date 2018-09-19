@@ -3,6 +3,8 @@ import ObserverItem from './observer-item'
 const Observer = (function() {
   const items = []
   const Observers = {}
+
+  // adds 100 steps to observer
   const buildThresholdList = numSteps => {
     var thresholds = []
     for (var i = 1.0; i <= numSteps; i++) {
@@ -13,6 +15,7 @@ const Observer = (function() {
     return thresholds
   }
 
+  // updates an observer item with current observer props
   const handleUpdate = entries => {
     entries.forEach(entry => {
       const item = items.filter(item => item.elm === entry.target)[0]
@@ -20,6 +23,7 @@ const Observer = (function() {
     })
   }
 
+  // creates observer with supplied rootmargin
   const createObserver = rootMargin => {
     return new IntersectionObserver(handleUpdate, {
       root: null,
@@ -28,6 +32,7 @@ const Observer = (function() {
     })
   }
 
+  // create an observer and observer item
   const observe = ({
     elm,
     callback,
