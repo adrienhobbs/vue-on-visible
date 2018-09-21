@@ -154,10 +154,10 @@ The following properties will be send on all visibility updates:
 The default offset will trigger visibility changes when your component enters/exits the viewport at the top or bottom. You can change this behavior by providing your own offsets object. Negative offsets are triggered inside of the viewport, while positive offsets are triggered outside the viewport.
 
 ```javascript
-// Place triggers 10% below the top of the viewport, and 10% above the bottom of the viewport.
+// Place triggers 10% above the top of the viewport, and 10% below the bottom of the viewport.
 {top: '10%', bottom: '10%'}
 
-// Place triggers 10% above the top of the viewport, and 10% below the bottom of the viewport.
+// Place triggers 10% below the top of the viewport, and 10% above the bottom of the viewport.
 {top: '-10%', bottom: '-10%'}
 ```
 
