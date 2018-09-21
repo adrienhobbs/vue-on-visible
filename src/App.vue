@@ -72,7 +72,7 @@ export default {
   components: {OnVisible, AnimateOnVisible},
   data() {
     return {
-      controls: false,
+      controls: true,
       animationDuration: 650,
       animateAbove: true,
       animateBelow: true,
@@ -108,7 +108,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
     Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
   margin-bottom: 200px;
-  font-size: 19px;
+  font-size: 15px;
 }
 
 .boxes {
@@ -122,5 +122,26 @@ body {
 .box {
   height: 89vh;
   width: 100%;
+}
+
+.controls {
+  background: white;
+  padding: 20px;
+  position: fixed;
+  top: 30px;
+  left: 30px;
+  border: 3px solid #e6e6e6;
+}
+
+.control {
+  margin-top: 5px;
+}
+
+.control label {
+  display: block;
+}
+
+.control.checkbox label {
+  display: inline-block;
 }
 </style>
