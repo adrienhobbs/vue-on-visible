@@ -3,6 +3,7 @@
     <div class="boxes">
       <div v-for="(color, i) in colors"
            :key="i">
+        <!-- Trigger point is 10% away from bottom and top of viewport -->
         <AnimateOnVisible :animationDuration="parseInt(animationDuration)"
                           :animateAbove="animateAbove"
                           :animateBelow="animateBelow"
