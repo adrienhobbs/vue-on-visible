@@ -2,19 +2,16 @@
   <div id="app">
     <div class="boxes">
       <div v-for="(color, i) in colors"
-           :durationMs="parseInt(animationDurationMs)"
-           :animateAbove="animateAbove"
-           :animateBelow="animateBelow"
-           :animationType="animation"
-           :yoyo="yoyo"
            :key="i">
-        <OnVisible>
-          <div slot-scope="viewport"
-               class="box">
-            <ScopeTest :viewport="viewport"
-                       :style="{ backgroundColor: color.bg}"></ScopeTest>
-          </div>
-        </OnVisible>
+        <AnimateOnVisible :animationDuration="parseInt(animationDuration)"
+                          :animateAbove="animateAbove"
+                          :animateBelow="animateBelow"
+                          :animationType="animation"
+                          :offsets="{top: '-10%', bottom: '-10%'}"
+                          :yoyo="yoyo">
+          <div class="box"
+               :style="{backgroundColor: color.bg}" />
+        </AnimateOnVisible>
       </div>
     </div>
     <div class="controls">
@@ -27,6 +24,7 @@
           <label for="">Effect</label>
           <select v-model="animation">
             <option value="fade">Fade</option>
+            <option value="slide">Slide</option>
             <option value="zoom">Zoom</option>
           </select>
         </div>
@@ -48,7 +46,7 @@
         <div class="control">
           <label for="">Duration in Ms</label>
           <input type="number"
-                 v-model="animationDurationMs"
+                 v-model="animationDuration"
                  min="100"
                  step="50">
         </div>
@@ -68,18 +66,19 @@
 // @todo using intersection ration make an animation ease
 import OnVisible from './components/OnVisible'
 import ScopeTest from './components/ScopeTest'
+import AnimateOnVisible from './components/AnimateOnVisible'
 
 export default {
   name: 'app',
-  components: {OnVisible, ScopeTest},
+  components: {OnVisible, ScopeTest, AnimateOnVisible},
   data() {
     return {
       controls: false,
-      animationDurationMs: 650,
+      animationDuration: 650,
       animateAbove: true,
       animateBelow: true,
       numItems: 10,
-      animation: 'fade',
+      animation: 'slide',
       yoyo: true,
     }
   },
