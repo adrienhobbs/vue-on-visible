@@ -2,22 +2,62 @@
   <div id="app">
     <div class="boxes">
       <div v-for="(color, i) in colors"
-           :yoyo="yoyo"
            :key="i">
-        <OnVisible :yoyo="yoyo">
-          <div slot-scope="onVisible"
-               class="box"
-               :style="{backgroundColor: color.bg}">
-            <div style="position: relative; width: 100%; height: 100%">
-              <div style="top: 10px; position: absolute;">
-                {{onVisible.viewport}}
-              </div>
-              <div style="bottom: 10px; position: absolute;">
-                {{onVisible.viewport}}
-              </div>
-            </div>
-          </div>
-        </OnVisible>
+        <!-- Trigger point is 10% away from bottom and top of viewport -->
+        <AnimateOnVisible :animationDuration="parseInt(animationDuration)"
+                          :animateAbove="animateAbove"
+                          :animateBelow="animateBelow"
+                          :animationType="animation"
+                          :offsets="{top: '-10%', bottom: '-10%'}"
+                          :yoyo="yoyo">
+          <div class="box"
+               :style="{backgroundColor: color.bg}" />
+        </AnimateOnVisible>
+      </div>
+    </div>
+    <div class="controls">
+      <label for="checkbox">Toggle Controls</label>
+      <input type="checkbox"
+             v-model="controls">
+      <div class="select"
+           v-if="controls">
+        <div class="control">
+          <label for="">Effect</label>
+          <select v-model="animation">
+            <option value="fade">Fade</option>
+            <option value="slide">Slide</option>
+            <option value="zoom">Zoom</option>
+          </select>
+        </div>
+        <div class="control">
+          <label for="checkbox">YoYo</label>
+          <input type="checkbox"
+                 v-model="yoyo">
+        </div>
+        <div class="control checkbox">
+          <label for="checkbox">Animate Above</label>
+          <input type="checkbox"
+                 v-model="animateAbove">
+        </div>
+        <div class="control checkbox">
+          <label for="checkbox">Animate Below</label>
+          <input type="checkbox"
+                 v-model="animateBelow">
+        </div>
+        <div class="control">
+          <label for="">Duration in Ms</label>
+          <input type="number"
+                 v-model="animationDuration"
+                 min="100"
+                 step="50">
+        </div>
+        <div class="control">
+          <label for="">Number of items</label>
+          <input type="number"
+                 v-model="numItems"
+                 min="50"
+                 max="500">
+        </div>
       </div>
     </div>
   </div>
@@ -25,14 +65,20 @@
 
 <script>
 import OnVisible from './components/OnVisible'
+import AnimateOnVisible from './components/AnimateOnVisible'
 
 export default {
   name: 'app',
-  components: {OnVisible},
+  components: {OnVisible, AnimateOnVisible},
   data() {
     return {
-      numItems: 40,
-      yoyo: true
+      controls: false,
+      animationDuration: 650,
+      animateAbove: true,
+      animateBelow: true,
+      numItems: 10,
+      animation: 'slide',
+      yoyo: true,
     }
   },
   computed: {

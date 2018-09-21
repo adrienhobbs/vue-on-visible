@@ -35,7 +35,7 @@ const Observer = (function() {
   // create an observer and observer item
   const observe = ({
     elm,
-    callback,
+    onUpdate,
     offsets = { top: 0, bottom: 0 },
     yoyo = false
   }) => {
@@ -47,7 +47,7 @@ const Observer = (function() {
     Observers[rootMargin].observe(elm)
 
     newItem.elm = elm
-    newItem.callback = callback
+    newItem.onUpdate = onUpdate
     newItem.offsets = offsets
     newItem.yoyo = yoyo
     newItem.rootMargin = rootMargin
