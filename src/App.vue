@@ -66,12 +66,11 @@
 <script>
 // @todo using intersection ration make an animation ease
 import OnVisible from './components/OnVisible'
-import ScopeTest from './components/ScopeTest'
 import AnimateOnVisible from './components/AnimateOnVisible'
 
 export default {
   name: 'app',
-  components: {OnVisible, ScopeTest, AnimateOnVisible},
+  components: {OnVisible, AnimateOnVisible},
   data() {
     return {
       controls: false,
