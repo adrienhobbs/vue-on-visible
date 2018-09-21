@@ -1,7 +1,13 @@
 <template>
   <div v-show="rect"
        v-on-visible="{onUpdate, offsets, yoyo}">
-    <slot :viewport="{isVisible, isAbove, isBelow, isPartiallyAbove, isPartiallyBelow, intersectionRatio}" />
+    <slot :isVisible={isVisible}
+          :isAbove={isAbove}
+          :isBelow={isBelow}
+          :isPartiallyAbove={isPartiallyAbove}
+          :isPartiallyBelow={isPartiallyBelow}
+          :intersectionRation={intersectionRatio}
+          :rect={rect} />
   </div>
 </template>
 
