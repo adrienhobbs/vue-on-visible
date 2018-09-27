@@ -1,5 +1,5 @@
 <template>
-  <div v-on-visible="{onUpdate, offsets, yoyo}">
+  <div v-on-visible="{onUpdate, topOffset, bottomOffset, repeat}">
     <slot :onVisible="{isVisible, isAbove, isBelow, isPartiallyAbove, isPartiallyBelow, intersectionRatio}" />
   </div>
 </template>

@@ -3,23 +3,23 @@
     <div class="boxes">
       <div v-for="(color, i) in colors"
            :key="i">
-        <!-- Trigger point is 10% away from bottom and top of viewport -->
-        <OnVisible :offsets="{top: '-10%', bottom: '-10%'}"
-                   :yoyo="yoyo">
+        <OnVisible topOffset="-20%"
+                   bottomOffset="-20%"
+                   :repeat="true">
           <div class="box"
                :style="{backgroundColor: '#e6e6e6'}"
                slot-scope="{onVisible}">
             <div class="top-info">
               <div v-for="(value, key) in onVisible"
                    :key="key">
-                <h3>{{key}}</h3>: <h5>{{value}}</h5>
+                <h4>{{key}}</h4>: <h5>{{value}}</h5>
               </div>
             </div>
             <div class="bottom-info">
               <div v-for="(value, key) in onVisible"
                    :key="key">
                 <div>
-                  <h3>{{key}}</h3>: <h5>{{value}}</h5>
+                  <h4>{{key}}</h4>: <h5>{{value}}</h5>
                 </div>
               </div>
             </div>
@@ -40,8 +40,7 @@ export default {
   components: {OnVisible},
   data() {
     return {
-      numItems: 10,
-      yoyo: true,
+      numItems: 10
     }
   },
   computed: {
@@ -68,7 +67,7 @@ body {
   margin-bottom: 200px;
   font-size: 15px;
 }
-h3,
+h4,
 h5 {
   display: inline-block;
   margin: 0;
@@ -77,7 +76,7 @@ h5 {
   display: grid;
   max-width: 768px;
   justify-self: center;
-  grid-gap: 10px;
+  grid-gap: 40px;
   margin: auto;
 }
 
@@ -107,9 +106,9 @@ h5 {
   height: 3px;
 }
 .trigger.top {
-  top: 10%;
+  top: 20%;
 }
 .trigger.bottom {
-  bottom: 10%;
+  bottom: 20%;
 }
 </style>

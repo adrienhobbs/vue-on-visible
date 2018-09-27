@@ -1,14 +1,15 @@
 const OnVisibleMixin = {
   name: 'OnVisibleMixin',
   props: {
-    offsets: {
-      type: Object,
-      default: function() {
-        return { top: '0%', bottom: '0%' }
-      },
-      required: false
+    topOffset: {
+      type: String,
+      default: '0%'
     },
-    yoyo: {
+    bottomOffset: {
+      type: String,
+      default: '0%'
+    },
+    repeat: {
       type: Boolean,
       default: true
     }
@@ -38,7 +39,7 @@ const OnVisibleMixin = {
       ].forEach(prop => {
         this[prop] = item[prop]
       })
-      this.$emit('visibility-update', item)
+      // this.$emit('visibility-update', item)
     }
   }
 }
