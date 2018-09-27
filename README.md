@@ -1,6 +1,11 @@
 # Vue-On-Visible
 
-A collection of Vue components aimed to help you create better interactions with elements as they enter and exit the viewport.
+## *Get notified when an element enters and exits the viewport.*
+
+Designed to help you improve performance and integrate interactivity in response to an elements position on the page. 
+Example use cases:
+1. Trigger an animation on elements entering and exiting the viewport.
+2. Lazy loading an image when an element is 10% below the viewport. 
 
 [Demo](https://adrienhobbs.github.io/vue-on-visible/)
 
@@ -44,7 +49,6 @@ This uses the [`Interaction Observer API`](https://developer.mozilla.org/en-US/d
 ## Table of contents
 
 - [Installation](#installation)
-- [Animation](#animation)
 - [Component](#component)
 - [Directive](#directive)
 - [Properties](#properties)
@@ -67,26 +71,6 @@ import OnVisible from 'vue-on-visible'
 Vue.use(OnVisible)
 ```
 
-# Animation
-
-Using built-in component `<AnimateOnVisible>` for quick turnkey animations on visibility changes.
-
-```html
-  <AnimateOnVisible>
-    <YourComponentHere />
-  </AnimateOnVisible>
-```
-See below for available props.
-
-| PropName          | Type         | Default                   | Description                                                         |
-| ----------------- | :----------: | :------------------------ | :------------------------------------------------------------------ |
-| animateAbove      | BOOLEAN      | false                     | Animate when entering from above viewport?                          |
-| animateBelow      | BOOLEAN      | true                      | Animate when entering from below viewport?                          |
-| animationType     | STRING       | fade                      | Choose from fade, slide, and zoom. More to come.                    |
-| animationDuration | NUMBER in ms | 650                       | Duration of animations.                                             |
-| yoyo              | BOOLEAN      | false                     | Repeat animaton on entering and exiting?                            |
-| offsets           | OBJECT       | {top: '0%', bottom: '0%'} | When to trigger visibility updates. See Offsets for an explanation. |
-
 # Directive 
 Use the `v-on-visible` directive to integrate visibility updates into your own components.
 
@@ -98,7 +82,7 @@ Template:
 | PropName | Type     | Default                   | Description                                                         |
 | -------- | :------: | :------------------------ | :------------------------------------------------------------------ |
 | onUpdate | Function | n/a - REQUIRED            | Function to be called when visibility changes occur.                |
-| yoyo     | BOOLEAN  | false                     | Repeat animaton on entering and exiting?                            |
+| yoyo     | BOOLEAN  | false                     | Trigger updates on every enter & exit of viewport?                  |
 | offsets  | OBJECT   | {top: '0%', bottom: '0%'} | When to trigger visibility updates. See Offsets for an explanation. |
 
 Component:
@@ -127,8 +111,10 @@ const YourComponent = {
 # Component
 Using built-in component `<OnVisible>` with `slot-scope` for updates on visibility changes.
 
+> In this example, Intersection Point is 10% from the top and bottom inside the viewport. 
+      
 ```html
-<OnVisible :offsets={} :yoyo="true">
+<OnVisible :offsets="{top: '-10%', bottom: '-10%'}" :yoyo="true">
   <div slot-scope="onVisible">
     <!-- SEE PROPERTIES SECTION BELOW FOR AVAILABLE PROPS -->
     <YourComponent isVisible="onVisible.isVisible" isBelow="onVisible.isBelow"/>
