@@ -75,17 +75,17 @@ Vue.use(OnVisible)
 # Directive 
 Use the `v-on-visible` directive to integrate visibility updates into your own components.
 
-Template: 
-```html
-  <YourComponent v-on-visible="{onUpdate, topOffset, bottomOffset, repeat}" />
-```
-
 | PropName     | Type     | Default        | Description                                                         |
 | ------------ | :------: | :------------- | :------------------------------------------------------------------ |
 | onUpdate     | Function | n/a - REQUIRED | Function to be called when visibility changes occur.                |
 | repeat       | BOOLEAN  | false          | Trigger updates on every enter & exit of viewport?                  |
 | topOffset    | STRING   | "0%"           | When to trigger visibility updates. See Offsets for an explanation. |
 | bottomOffset | STRING   | "0%"           | When to trigger visibility updates. See Offsets for an explanation. |
+
+Template: 
+```html
+  <YourComponent v-on-visible="{onUpdate, topOffset, bottomOffset, repeat}" />
+```
 
 Component:
 ```javascript
@@ -114,7 +114,7 @@ Using built-in component `<OnVisible>` with `slot-scope` for updates on visibili
 > In this example, Intersection Point is 10% from the top and bottom inside the viewport. 
       
 ```html
-<OnVisible :offsets="{top: '-10%', bottom: '-10%'}" :repeat="true">
+<OnVisible topOffset="-10%" bottomOffset="-10%" :repeat="true">
   <div slot-scope="onVisible">
     <!-- SEE PROPERTIES SECTION BELOW FOR AVAILABLE PROPS -->
     <YourComponent isVisible="onVisible.isVisible" isBelow="onVisible.isBelow"/>
