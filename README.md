@@ -1,8 +1,14 @@
 # Vue-On-Visible
 
-A collection of Vue components aimed to help you create better interactions with elements as they enter and exit the viewport.
+## *Get notified when an element enters and exits the viewport.*
 
-[Demo](https://adrienhobbs.github.io/vue-on-visible/)
+Designed to help you improve performance and integrate interactivity in response to an elements position on the page. 
+
+Example use cases:
+1. Trigger an animation on elements entering and exiting the viewport.
+2. Lazy loading an image when an element is 10% below the viewport. 
+
+See [Demo](https://adrienhobbs.github.io/vue-on-visible/).
 
 This uses the [`Interaction Observer API`](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) and includes a [`polyfill`](https://github.com/w3c/IntersectionObserver/blob/master/polyfill/README.md) enabling support in the following browsers:
 
@@ -44,7 +50,6 @@ This uses the [`Interaction Observer API`](https://developer.mozilla.org/en-US/d
 ## Table of contents
 
 - [Installation](#installation)
-- [Animation](#animation)
 - [Component](#component)
 - [Directive](#directive)
 - [Properties](#properties)
@@ -67,58 +72,37 @@ import OnVisible from 'vue-on-visible'
 Vue.use(OnVisible)
 ```
 
-# Animation
-
-Using built-in component `<AnimateOnVisible>` for quick turnkey animations on visibility changes.
-
-```html
-  <AnimateOnVisible>
-    <YourComponentHere />
-  </AnimateOnVisible>
-```
-See below for available props.
-
-| PropName          | Type         | Default                   | Description                                                         |
-| ----------------- | :----------: | :------------------------ | :------------------------------------------------------------------ |
-| animateAbove      | BOOLEAN      | false                     | Animate when entering from above viewport?                          |
-| animateBelow      | BOOLEAN      | true                      | Animate when entering from below viewport?                          |
-| animationType     | STRING       | fade                      | Choose from fade, slide, and zoom. More to come.                    |
-| animationDuration | NUMBER in ms | 650                       | Duration of animations.                                             |
-| yoyo              | BOOLEAN      | false                     | Repeat animaton on entering and exiting?                            |
-| offsets           | OBJECT       | {top: '0%', bottom: '0%'} | When to trigger visibility updates. See Offsets for an explanation. |
-
 # Directive 
 Use the `v-on-visible` directive to integrate visibility updates into your own components.
 
 Template: 
 ```html
-  <YourComponent v-on-visible="{onUpdate, offsets, yoyo}" />
+  <YourComponent v-on-visible="{onUpdate, topOffset, bottomOffset, repeat}" />
 ```
 
-| PropName | Type     | Default                   | Description                                                         |
-| -------- | :------: | :------------------------ | :------------------------------------------------------------------ |
-| onUpdate | Function | n/a - REQUIRED            | Function to be called when visibility changes occur.                |
-| yoyo     | BOOLEAN  | false                     | Repeat animaton on entering and exiting?                            |
-| offsets  | OBJECT   | {top: '0%', bottom: '0%'} | When to trigger visibility updates. See Offsets for an explanation. |
+| PropName     | Type     | Default        | Description                                                         |
+| ------------ | :------: | :------------- | :------------------------------------------------------------------ |
+| onUpdate     | Function | n/a - REQUIRED | Function to be called when visibility changes occur.                |
+| repeat       | BOOLEAN  | false          | Trigger updates on every enter & exit of viewport?                  |
+| topOffset    | STRING   | "0%"           | When to trigger visibility updates. See Offsets for an explanation. |
+| bottomOffset | STRING   | "0%"           | When to trigger visibility updates. See Offsets for an explanation. |
 
 Component:
 ```javascript
 
 const YourComponent = {
-  name: 'OnVisibleMixin',
   data() {
     return {
-      isVisible: null,
-      offsets: {
-        top: '0%', bottom: '0%' 
-      },
-      yoyo: true 
+      topOffset: '0%',
+      bottomOffset: '0%',
+      repeat: true 
     }
   },
   methods: {
     onUpdate(item) {
       // Do something with values...
-      // See Properties Section for properties available on an item.
+      // isVisible, isAbove, isBelow, isPartiallyAbove, isPartiallyBelow, intersectionRatio
+      // See Properties Section for details
     }
   }
 }
@@ -127,8 +111,10 @@ const YourComponent = {
 # Component
 Using built-in component `<OnVisible>` with `slot-scope` for updates on visibility changes.
 
+> In this example, Intersection Point is 10% from the top and bottom inside the viewport. 
+      
 ```html
-<OnVisible :offsets={} :yoyo="true">
+<OnVisible :offsets="{top: '-10%', bottom: '-10%'}" :repeat="true">
   <div slot-scope="onVisible">
     <!-- SEE PROPERTIES SECTION BELOW FOR AVAILABLE PROPS -->
     <YourComponent isVisible="onVisible.isVisible" isBelow="onVisible.isBelow"/>
@@ -148,17 +134,21 @@ The following properties will be send on all visibility updates:
 | isPartiallyAbove  | BOOLEAN | Component is in viewport, but also above viewport  |
 | isPartiallyBelow  | BOOLEAN | Component is in viewport, but also below viewport  |
 | intersectionRatio | NUMBER  | Amount of component visible. Decimal between 0 - 1 |
-| rect              | OBJECT  | Object with boundingRect properties                |
 
 # Offsets
 The default offset will trigger visibility changes when your component enters/exits the viewport at the top or bottom. You can change this behavior by providing your own offsets object. Negative offsets are triggered inside of the viewport, while positive offsets are triggered outside the viewport.
 
+> For visibility changes to trigger when an element is outside the viewport use a positive number.
+
 ```javascript
-// Place triggers 10% above the top of the viewport, and 10% below the bottom of the viewport.
-{top: '10%', bottom: '10%'}
-
-// Place triggers 10% below the top of the viewport, and 10% above the bottom of the viewport.
-{top: '-10%', bottom: '-10%'}
+// Visibility changes occur 10% above the top of the viewport, and 10% below the bottom of the viewport.
+const topOffset = '10%'
+const bottomOffset = '10%'
 ```
+> For visibility changes to trigger when an element is inside the viewport use a negative number.
 
-> This is still a work in progress so any feedback and or pull requests are welcome.
+```javascript
+// Visibility changes occur 10% below the top of the viewport, and 10% above the bottom of the viewport.
+const topOffset = '-10%'
+const bottomOffset = '-10%'
+```

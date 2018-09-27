@@ -34,9 +34,10 @@ export default {
   },
   update(entry) {
     this.entry = entry
+    // trigger update function on component instance
     this.onUpdate(this)
 
-    if (entry.intersectionRatio > 0 && !this.yoyo) {
+    if (entry.intersectionRatio > 0 && !this.repeat) {
       this.observer.unobserve(this.elm)
     }
   }

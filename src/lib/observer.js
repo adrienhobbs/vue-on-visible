@@ -36,11 +36,12 @@ const Observer = (function() {
   const observe = ({
     elm,
     onUpdate,
-    offsets = { top: 0, bottom: 0 },
-    yoyo = false
+    topOffset = '0%',
+    bottomOffset = '0%',
+    repeat = false
   }) => {
     const newItem = Object.create(ObserverItem)
-    const rootMargin = `${offsets.top} 0px ${offsets.bottom} 0px`
+    const rootMargin = `${topOffset} 0px ${bottomOffset} 0px`
 
     // if an observer with the same root margin exists, use it, otherwise create a new one.
     Observers[rootMargin] = Observers[rootMargin] || createObserver(rootMargin)
@@ -48,9 +49,7 @@ const Observer = (function() {
 
     newItem.elm = elm
     newItem.onUpdate = onUpdate
-    newItem.offsets = offsets
-    newItem.yoyo = yoyo
-    newItem.rootMargin = rootMargin
+    newItem.repeat = repeat
     newItem.observer = Observers[rootMargin]
 
     items.push(newItem)

@@ -3,82 +3,44 @@
     <div class="boxes">
       <div v-for="(color, i) in colors"
            :key="i">
-        <!-- Trigger point is 10% away from bottom and top of viewport -->
-        <AnimateOnVisible :animationDuration="parseInt(animationDuration)"
-                          :animateAbove="animateAbove"
-                          :animateBelow="animateBelow"
-                          :animationType="animation"
-                          :offsets="{top: '-10%', bottom: '-10%'}"
-                          :yoyo="yoyo">
+        <OnVisible topOffset="-20%"
+                   bottomOffset="-20%"
+                   :repeat="true">
           <div class="box"
-               :style="{backgroundColor: color.bg}" />
-        </AnimateOnVisible>
+               :style="{backgroundColor: '#e6e6e6'}"
+               slot-scope="{onVisible}">
+            <div class="top-info">
+              <div v-for="(value, key) in onVisible"
+                   :key="key">
+                <h4>{{key}}</h4>: <h5>{{value}}</h5>
+              </div>
+            </div>
+            <div class="bottom-info">
+              <div v-for="(value, key) in onVisible"
+                   :key="key">
+                <div>
+                  <h4>{{key}}</h4>: <h5>{{value}}</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </OnVisible>
       </div>
     </div>
-    <div class="controls">
-      <label for="checkbox">Toggle Controls</label>
-      <input type="checkbox"
-             v-model="controls">
-      <div class="select"
-           v-if="controls">
-        <div class="control">
-          <label for="">Effect</label>
-          <select v-model="animation">
-            <option value="fade">Fade</option>
-            <option value="slide">Slide</option>
-            <option value="zoom">Zoom</option>
-          </select>
-        </div>
-        <div class="control">
-          <label for="checkbox">YoYo</label>
-          <input type="checkbox"
-                 v-model="yoyo">
-        </div>
-        <div class="control checkbox">
-          <label for="checkbox">Animate Above</label>
-          <input type="checkbox"
-                 v-model="animateAbove">
-        </div>
-        <div class="control checkbox">
-          <label for="checkbox">Animate Below</label>
-          <input type="checkbox"
-                 v-model="animateBelow">
-        </div>
-        <div class="control">
-          <label for="">Duration in Ms</label>
-          <input type="number"
-                 v-model="animationDuration"
-                 min="100"
-                 step="50">
-        </div>
-        <div class="control">
-          <label for="">Number of items</label>
-          <input type="number"
-                 v-model="numItems"
-                 min="50"
-                 max="500">
-        </div>
-      </div>
-    </div>
+    <div class="trigger top"></div>
+    <div class="trigger bottom"></div>
   </div>
 </template>
 
 <script>
 import OnVisible from './components/OnVisible'
-import AnimateOnVisible from './components/AnimateOnVisible'
 
 export default {
   name: 'app',
-  components: {OnVisible, AnimateOnVisible},
+  components: {OnVisible},
   data() {
     return {
-      controls: true,
-      animationDuration: 650,
-      animateAbove: true,
-      animateBelow: true,
-      numItems: 10,
-      animation: 'slide',
-      yoyo: true,
+      numItems: 10
     }
   },
   computed: {
@@ -89,11 +51,6 @@ export default {
           bg: `hsl(${(idx * 2 / num) * 360},100%,50%)`
         }
       }) 
-    }
-  },
-  methods: {
-    getRandomHeight() {
-      return Math.floor(Math.random() * (500 - 150 + 1)) + 150
     }
   }
 }
@@ -110,38 +67,48 @@ body {
   margin-bottom: 200px;
   font-size: 15px;
 }
-
+h4,
+h5 {
+  display: inline-block;
+  margin: 0;
+}
 .boxes {
   display: grid;
   max-width: 768px;
   justify-self: center;
-  grid-gap: 10px;
+  grid-gap: 40px;
   margin: auto;
 }
 
 .box {
-  height: 89vh;
+  height: 59vh;
   width: 100%;
+  position: relative;
+  padding: 30px;
 }
 
-.controls {
-  background: white;
-  padding: 20px;
-  position: fixed;
+.top-info {
+  width: 100%;
+  position: absolute;
   top: 30px;
-  left: 30px;
-  border: 3px solid #e6e6e6;
 }
 
-.control {
-  margin-top: 5px;
+.bottom-info {
+  width: 100%;
+  position: absolute;
+  bottom: 30px;
 }
 
-.control label {
-  display: block;
+.trigger {
+  position: fixed;
+  width: 100%;
+  background: white;
+  height: 3px;
 }
-
-.control.checkbox label {
-  display: inline-block;
+.trigger.top {
+  top: 20%;
+}
+.trigger.bottom {
+  bottom: 20%;
 }
 </style>
