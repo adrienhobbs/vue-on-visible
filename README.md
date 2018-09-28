@@ -1,6 +1,6 @@
 # Vue-On-Visible
 
-## *Get notified when an element enters and exits the viewport.*
+*Easily observe changes in an elements visibility & viewport location.*
 
 Designed to help you improve performance and integrate interactivity in response to an elements position on the page. 
 
